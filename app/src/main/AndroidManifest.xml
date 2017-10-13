@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.thehacker.whatsthat">
+    package="com.example.thehacker.whatsthat"
+    >
+
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera2"
+        android:required="true"/>
 
     <application
         android:allowBackup="true"
