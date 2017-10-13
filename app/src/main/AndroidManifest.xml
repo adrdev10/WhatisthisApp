@@ -1,6 +1,12 @@
+
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.thehacker.whatsthat">
+    package="com.example.thehacker.whatsthat"
+    >
+
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera2"
+        android:required="true"/>
 
     <application
         android:allowBackup="true"
@@ -18,11 +24,8 @@
         </activity>
         <activity android:name=".NavigationActivity" />
         <activity android:name=".TakePictureActivity" />
-        <activity android:name=".ResultsActivity" />
-        <activity
-            android:name=".NavigationDrawerActivity"
-            android:label="@string/title_activity_navigation_drawer"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".ResultsActivity"></activity>
     </application>
+
 
 </manifest>

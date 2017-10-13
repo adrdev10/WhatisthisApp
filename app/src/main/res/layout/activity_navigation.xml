@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,35 +8,10 @@
     tools:context="com.example.thehacker.whatsthat.NavigationActivity">
 
     <Button
-        android:id="@+id/History"
-        android:layout_width="88dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="25dp"
-        android:text="History"
-        app:layout_constraintBottom_toTopOf="@+id/takeAPicture"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Gallery"
-        app:layout_constraintVertical_bias="0.502" />
-
-    <Button
-        android:id="@+id/Gallery"
-        android:layout_width="88dp"
-        android:layout_height="48dp"
-        android:text="Gallery"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="90dp" />
-
-    <Button
-        android:id="@+id/takeAPicture"
-        android:layout_width="88dp"
-        android:layout_height="48dp"
-        android:text="Camera"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="94dp" />
+        android:id="@+id/navPictureButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Take Picture"
+        tools:layout_editor_absoluteX="132dp"
+        tools:layout_editor_absoluteY="342dp" />
 </android.support.constraint.ConstraintLayout>
