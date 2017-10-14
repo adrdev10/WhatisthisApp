@@ -1,3 +1,4 @@
+
 package com.example.thehacker.whatsthat;
 
 import android.content.Intent;
@@ -26,3 +27,4 @@ public class SplashMainActivity extends AppCompatActivity {
         });
     }
 }
+
