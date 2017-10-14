@@ -60,4 +60,11 @@
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent" />
 
+    <TextView
+        android:id="@+id/testText"
+        android:layout_width="327dp"
+        android:layout_height="155dp"
+        tools:layout_editor_absoluteX="29dp"
+        tools:layout_editor_absoluteY="331dp" />
+
 </android.support.constraint.ConstraintLayout>
