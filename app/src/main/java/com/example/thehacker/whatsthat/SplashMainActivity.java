@@ -50,7 +50,7 @@ public class SplashMainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 startAnimation();
-                Intent intent = new Intent(SplashMainActivity.this, NavigationActivity.class);
+                Intent intent = new Intent(SplashMainActivity.this, TakePictureActivity.class);
                 startActivity(intent);
 
             }

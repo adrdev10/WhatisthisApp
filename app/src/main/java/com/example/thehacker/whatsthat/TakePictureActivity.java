@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,7 +24,7 @@ import java.util.Date;
 
 public class TakePictureActivity extends AppCompatActivity {
 
-    private Button cameraButton;
+    private ImageButton cameraButton;
     private Button resultsButton;
     private TextView placeholderText;
     private ImageView picturePreview;
@@ -34,7 +35,7 @@ public class TakePictureActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_picture);
 
-        cameraButton = (Button)findViewById(R.id.takePictureButton);
+        cameraButton = (ImageButton)findViewById(R.id.takePictureButton);
         resultsButton = (Button)findViewById(R.id.resultsButton);
         placeholderText = (TextView)findViewById(R.id.placeholderText);
         picturePreview = (ImageView)findViewById(R.id.picturePreview);
@@ -89,7 +90,7 @@ public class TakePictureActivity extends AppCompatActivity {
             picturePreview.setImageBitmap(imageBitmap);
         }
 
-        cameraButton.setText("Retake Picture");
+
 
     }
 }
