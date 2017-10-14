@@ -42,7 +42,6 @@ public class TakePictureActivity extends AppCompatActivity {
 
     private Button cameraButton;
     private Button resultsButton;
-    private TextView placeholderText;
     private ImageView picturePreview;
     private int myRequestCode = 1;
     private String API_KEY = ""; // ADD API KEY!!!
@@ -58,7 +57,6 @@ public class TakePictureActivity extends AppCompatActivity {
 
         cameraButton = (Button)findViewById(R.id.takePictureButton);
         resultsButton = (Button)findViewById(R.id.resultsButton);
-        placeholderText = (TextView)findViewById(R.id.placeholderText);
         picturePreview = (ImageView)findViewById(R.id.picturePreview);
         testText = (TextView)findViewById(R.id.testText);
 
@@ -97,7 +95,11 @@ public class TakePictureActivity extends AppCompatActivity {
         resultsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                
+  
                 testText.setText("Sending to Clarifai");
+
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 imageBitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
                 byte[] bitArray = bos.toByteArray();
@@ -116,11 +118,13 @@ public class TakePictureActivity extends AppCompatActivity {
                                     JSONArray test = new JSONArray(testJSON);
                                     JSONObject test2 = test.getJSONObject(0);
                                     JSONArray test3 = test2.getJSONArray("data");
+
                                     JSONObject test4 = test3.getJSONObject(0);
                                     String test5 = test4.getString("name");
                                     Double test6 = test4.getDouble("value");
                                     testText.setText(test5 + " " + test6.toString());
                                     Log.v("TakePic", test5 + " " + test6.toString());
+
                                 } catch (JSONException e) {
                                     Log.e("TakePic", e.toString());
                                 }
