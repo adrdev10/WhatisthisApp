@@ -45,7 +45,7 @@ public class TakePictureActivity extends AppCompatActivity {
     private ImageView picturePreview;
     private int myRequestCode = 1;
     private String API_KEY = ""; // ADD API KEY!!!
-    private static Uri photoURI;
+    private static File photoURI;
     private TextView testText;
     private static String fileName;
     private Bitmap imageBitmap;
@@ -76,16 +76,18 @@ public class TakePictureActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 // Create file to hold picture
-                File photoFile = null;
+                // Was file Type for external
+                String photoFile = null;
                 try {
                     photoFile = createFile();
                 } catch (IOException ex) {
                     // Code for if an error with creating the file
                 }
                 if (photoFile != null) {
-                     photoURI = FileProvider.getUriForFile(TakePictureActivity.this,
+                    photoURI = new File(getApplicationContext().getFilesDir(), photoFile);
+                     /*photoURI = FileProvider.getUriForFile(TakePictureActivity.this,
                             "com.example.thehacker.whatsthat",
-                            photoFile);
+                            photoFile);*/
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                     startActivityForResult(intent, myRequestCode);
                 }
@@ -108,7 +110,7 @@ public class TakePictureActivity extends AppCompatActivity {
 
                 blah.getDefaultModels().foodModel().predict()
                         .withInputs(
-                                ClarifaiInput.forImage(bitArray)
+                                ClarifaiInput.forImage(bitArray)//new File(fileName))
                         )
                         .executeAsync(new ClarifaiRequest.Callback<List<ClarifaiOutput<Concept>>>() {
                             @Override
@@ -145,16 +147,18 @@ public class TakePictureActivity extends AppCompatActivity {
         });
     }
 
-    private File createFile() throws IOException {
+    // Returned File for external access
+    private String createFile() throws IOException {
         String timeStamp = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "whatsthat_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = getFilesDir();
+        //File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,
                 ".jpg",
                 storageDir);
         fileName = image.getAbsolutePath();
-        return image;
+        return image.getName();
     }
 
     @Override
