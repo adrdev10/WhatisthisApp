@@ -97,7 +97,11 @@ public class TakePictureActivity extends AppCompatActivity {
         resultsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //testText.setText("Sending to Clarifai");
+
+                
+  
+                testText.setText("Sending to Clarifai");
+
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 imageBitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
                 byte[] bitArray = bos.toByteArray();
@@ -116,14 +120,12 @@ public class TakePictureActivity extends AppCompatActivity {
                                     JSONArray test = new JSONArray(testJSON);
                                     JSONObject test2 = test.getJSONObject(0);
                                     JSONArray test3 = test2.getJSONArray("data");
-                                    JSONObject firstGroup = test3.getJSONObject(0);
-                                    JSONObject secondGroup = test3.getJSONObject(1);
-                                    String firstName = firstGroup.getString("name");
-                                    Double firstValue = firstGroup.getDouble("value");
-                                    String secondName = secondGroup.getString("name");
-                                    Double secondValue = secondGroup.getDouble("value");
-                                    testText.setText(firstName + " " + firstValue.toString() + "\n" +
-                                    secondName + " " + secondValue.toString());
+
+                                    JSONObject test4 = test3.getJSONObject(0);
+                                    String test5 = test4.getString("name");
+                                    Double test6 = test4.getDouble("value");
+                                    testText.setText(test5 + " " + test6.toString());
+                                    Log.v("TakePic", test5 + " " + test6.toString());
 
                                 } catch (JSONException e) {
                                     Log.e("TakePic", e.toString());
