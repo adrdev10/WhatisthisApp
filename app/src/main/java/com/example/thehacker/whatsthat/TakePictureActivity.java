@@ -25,8 +25,7 @@ import java.util.Date;
 public class TakePictureActivity extends AppCompatActivity {
 
     private ImageButton cameraButton;
-    private Button resultsButton;
-    private TextView placeholderText;
+    private ImageButton resultsButton;
     private ImageView picturePreview;
     private int myRequestCode = 1;
 
@@ -36,8 +35,8 @@ public class TakePictureActivity extends AppCompatActivity {
         setContentView(R.layout.activity_take_picture);
 
         cameraButton = (ImageButton)findViewById(R.id.takePictureButton);
-        resultsButton = (Button)findViewById(R.id.resultsButton);
-        placeholderText = (TextView)findViewById(R.id.placeholderText);
+        resultsButton = (ImageButton)findViewById(R.id.resultsButton);
+
         picturePreview = (ImageView)findViewById(R.id.picturePreview);
 
         // Check if camera permission granted
