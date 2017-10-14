@@ -78,7 +78,6 @@ public class TakePictureActivity extends AppCompatActivity {
                 imageFileName,
                 ".jpg",
                 storageDir);
-        );
         return image;
     }
 
