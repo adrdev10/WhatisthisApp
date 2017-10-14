@@ -1,3 +1,4 @@
+
 package com.example.thehacker.whatsthat;
 
 import android.content.Context;
@@ -25,10 +26,12 @@ public class SplashMainActivity extends AppCompatActivity {
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_main);
+
 
         image = (ImageView)findViewById(R.id.BackgroundView);
         button = (ImageButton)findViewById(R.id.LogoImageButton);
@@ -75,3 +78,4 @@ public class SplashMainActivity extends AppCompatActivity {
 
 
 }
+
