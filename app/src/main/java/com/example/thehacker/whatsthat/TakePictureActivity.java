@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.icu.text.SimpleDateFormat;
+import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.graphics.BitmapCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,6 +30,7 @@ public class TakePictureActivity extends AppCompatActivity {
     private TextView placeholderText;
     private ImageView picturePreview;
     private int myRequestCode = 1;
+    private String photoName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,23 +65,32 @@ public class TakePictureActivity extends AppCompatActivity {
                     // Code for if an error with creating the file
                 }
                 if (photoFile != null) {
-                    
+                    Uri photoURI = FileProvider.getUriForFile(TakePictureActivity.this,
+                            "com.example.thehacker.whatsthat",
+                            photoFile);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                     startActivityForResult(intent, myRequestCode);
                 }
+            }
+        });
+
+        resultsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
     }
 
     private File createFile() throws IOException {
-        String photoPath;
         String timeStamp = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        String imageFileName = "whatsthat_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,
                 ".jpg",
                 storageDir);
-        );
+        photoName = imageFileName;
         return image;
     }
 
