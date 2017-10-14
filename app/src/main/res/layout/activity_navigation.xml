@@ -1,17 +1,87 @@
-
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/background_light"
     tools:context="com.example.thehacker.whatsthat.NavigationActivity">
 
-    <Button
-        android:id="@+id/navPictureButton"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="#4dd081"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        android:id="@+id/linearLayout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="33.3"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/navPictureButton"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="@android:color/transparent"
+                app:srcCompat="@drawable/camera" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="33.3"
+            android:background="@android:color/transparent"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/imageButton8"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="@android:color/transparent"
+                app:srcCompat="@drawable/image" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="33.3"
+            android:background="@android:color/transparent"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/imageButton6"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="@android:color/transparent"
+                app:srcCompat="@drawable/history" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Take Picture"
-        tools:layout_editor_absoluteX="132dp"
-        tools:layout_editor_absoluteY="342dp" />
-</android.support.constraint.ConstraintLayout>
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="73dp"
+        android:text="What's That?"
+        android:textColor="@android:color/background_dark"
+        android:textSize="45sp" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="76dp"
+        android:text="Know What your eating."
+        android:textColor="@android:color/background_dark"
+        android:textSize="18sp" />
+
+</RelativeLayout>
