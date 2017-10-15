@@ -157,6 +157,7 @@ public class TakePictureActivity extends AppCompatActivity {
                 imageFileName,
                 ".jpg",
                 storageDir);
+
         fileName = image.getAbsolutePath();
         return image.getName();
     }

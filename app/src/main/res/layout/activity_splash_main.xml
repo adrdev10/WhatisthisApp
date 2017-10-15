@@ -24,15 +24,23 @@
         android:id="@+id/LogoImageButton"
         android:layout_width="120dp"
         android:layout_height="120dp"
+
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="76dp"
+        android:layout_marginTop="150dp"
+
         android:background="@android:color/transparent"
         android:contentDescription="Logo of the App"
         android:scaleType="centerInside"
         android:visibility="visible"
-        app:srcCompat="@drawable/logowhite"
+
+  app:srcCompat="@drawable/logowhite"
         android:layout_marginLeft="76dp"
         android:layout_marginTop="92dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
+
 
     <TextView
         android:id="@+id/textView"

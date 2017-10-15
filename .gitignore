@@ -7,3 +7,10 @@
 /build
 /captures
 .externalNativeBuild
+.idea/vcs.xml
+app/libs/
+app/src/main/res/drawable/background.png
+app/src/main/res/drawable/diet.jpg
+app/src/main/res/drawable/img.jpg
+app/src/main/res/drawable/logo.png
+app/src/main/res/drawable/logowhite.png
