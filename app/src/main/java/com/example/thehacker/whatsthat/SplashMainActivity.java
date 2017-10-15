@@ -1,4 +1,3 @@
-
 package com.example.thehacker.whatsthat;
 
 import android.content.Context;
@@ -13,7 +12,6 @@ import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-
 import jp.wasabeef.blurry.Blurry;
 
 public class SplashMainActivity extends AppCompatActivity {
@@ -24,14 +22,10 @@ public class SplashMainActivity extends AppCompatActivity {
     private Animation translateAnimation;
 
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_main);
-
 
         image = (ImageView)findViewById(R.id.BackgroundView);
         button = (ImageButton)findViewById(R.id.LogoImageButton);
@@ -49,21 +43,9 @@ public class SplashMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                startAnimation();
-                Intent intent = new Intent(SplashMainActivity.this, NavigationActivity.class);
-                startActivity(intent);
-
-            }
-        });
-
-    }
-
-    private void startAnimation() {
-
         button.setScaleX(0);
         button.setScaleY(0);
         button.animate().scaleX(1.5f).scaleY(1.5f);
-
     }
 
     private void setImageBlur() {
