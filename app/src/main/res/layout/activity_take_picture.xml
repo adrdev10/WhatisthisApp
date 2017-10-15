@@ -33,21 +33,6 @@
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent" />
 
-    <TextView
-        android:id="@+id/placeholderText"
-        android:layout_width="107dp"
-        android:layout_height="121dp"
-        android:text="Placeholder text for logo"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/picturePreview"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintTop_toTopOf="@+id/picturePreview"
-        android:layout_marginTop="8dp" />
-
     <ImageView
         android:id="@+id/picturePreview"
         android:layout_width="272dp"
@@ -59,5 +44,12 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent" />
+
+    <TextView
+        android:id="@+id/testText"
+        android:layout_width="327dp"
+        android:layout_height="155dp"
+        tools:layout_editor_absoluteX="29dp"
+        tools:layout_editor_absoluteY="331dp" />
 
 </android.support.constraint.ConstraintLayout>
