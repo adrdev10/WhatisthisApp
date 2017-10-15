@@ -30,6 +30,7 @@
         android:layout_marginBottom="25dp"
         app:layout_constraintBottom_toTopOf="@+id/picturePreview" />
 
+
     <ImageView
         android:id="@+id/howTo"
         android:layout_width="258dp"
@@ -198,5 +199,12 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/testText"
+        android:layout_width="327dp"
+        android:layout_height="155dp"
+        tools:layout_editor_absoluteX="29dp"
+        tools:layout_editor_absoluteY="331dp" />
 
 </android.support.constraint.ConstraintLayout>
