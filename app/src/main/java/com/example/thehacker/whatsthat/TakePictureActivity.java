@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -15,8 +16,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.speech.tts.TextToSpeech;
+import android.widget.ToggleButton;
 
 import com.google.gson.Gson;
 
@@ -29,6 +34,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
 
 import clarifai2.api.ClarifaiBuilder;
 import clarifai2.api.ClarifaiClient;
@@ -38,27 +45,41 @@ import clarifai2.dto.model.output.ClarifaiOutput;
 import clarifai2.dto.prediction.Concept;
 
 
-public class TakePictureActivity extends AppCompatActivity {
 
-    private Button cameraButton;
-    private Button resultsButton;
+public class TakePictureActivity extends AppCompatActivity implements TextToSpeech.OnInitListener{
+
+    private ImageButton cameraButton;
+    private ImageButton resultsButton;
     private ImageView picturePreview;
     private int myRequestCode = 1;
-    private String API_KEY = ""; // ADD API KEY!!!
+    private String API_KEY = ; // ADD API KEY!!!
     private static File photoURI;
-    private TextView testText;
     private static String fileName;
     private Bitmap imageBitmap;
+    private ImageView howTo;
+    private TextView helpText;
+    private TextView resultsText;
+    private ToggleButton modelToggle;
+    private TextToSpeech tts;
+    private boolean modelFood = true;
+    private boolean modelGeneral = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_picture);
 
-        cameraButton = (Button)findViewById(R.id.takePictureButton);
-        resultsButton = (Button)findViewById(R.id.resultsButton);
+
+        resultsText = (TextView)findViewById(R.id.resultsText);
+        helpText = (TextView)findViewById(R.id.helpText);
+        cameraButton = (ImageButton)findViewById(R.id.takePictureButton);
+        resultsButton = (ImageButton)findViewById(R.id.resultsButton);
         picturePreview = (ImageView)findViewById(R.id.picturePreview);
-        testText = (TextView)findViewById(R.id.testText);
+        howTo = (ImageView)findViewById(R.id.howTo);
+        modelToggle = (ToggleButton) findViewById(R.id.modelToggle);
+        tts = new TextToSpeech(TakePictureActivity.this, TakePictureActivity.this);
+
 
         // Check if camera permission granted
         int permissionsCheck = ContextCompat.checkSelfPermission(TakePictureActivity.this,
@@ -85,11 +106,26 @@ public class TakePictureActivity extends AppCompatActivity {
                 }
                 if (photoFile != null) {
                     photoURI = new File(getApplicationContext().getFilesDir(), photoFile);
+
                      /*photoURI = FileProvider.getUriForFile(TakePictureActivity.this,
                             "com.example.thehacker.whatsthat",
                             photoFile);*/
+
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                     startActivityForResult(intent, myRequestCode);
+                }
+            }
+        });
+
+        modelToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    modelGeneral = true;
+                    modelFood = false;
+                } else {
+                    modelFood = true;
+                    modelGeneral = false;
                 }
             }
         });
@@ -97,8 +133,23 @@ public class TakePictureActivity extends AppCompatActivity {
         resultsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                helpText.setVisibility(View.INVISIBLE);
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                imageBitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
+                byte[] bitArray = bos.toByteArray();
 
-                
+                ClarifaiClient myClient = new ClarifaiBuilder(API_KEY).buildSync();
+
+                if (modelFood == true) {
+                    foodModel(myClient, bitArray);
+                } else {
+                    generalModel(myClient, bitArray);
+                }
+
+
+                /*myClient.getDefaultModels().foodModel().predict()
+
+             
   
                 testText.setText("Sending to Clarifai");
 
@@ -109,6 +160,7 @@ public class TakePictureActivity extends AppCompatActivity {
                 ClarifaiClient blah = new ClarifaiBuilder(API_KEY).buildSync();
 
                 blah.getDefaultModels().foodModel().predict()
+
                         .withInputs(
                                 ClarifaiInput.forImage(bitArray)//new File(fileName))
                         )
@@ -122,10 +174,32 @@ public class TakePictureActivity extends AppCompatActivity {
                                     JSONArray test3 = test2.getJSONArray("data");
 
                                     JSONObject test4 = test3.getJSONObject(0);
+
+                                    final String test5 = test4.getString("name");
+                                    Double test6 = test4.getDouble("value");
+                                    Log.v("TakePic", test5 + " " + test6.toString());
+
+                                    Runnable updateView = new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            resultsText.setText(test5);
+                                            resultsText.post(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    tts.speak(test5, TextToSpeech.QUEUE_ADD, null);
+                                                }
+                                            });
+                                        }
+                                    };
+                                    runOnUiThread(updateView);
+
+
+
                                     String test5 = test4.getString("name");
                                     Double test6 = test4.getDouble("value");
                                     testText.setText(test5 + " " + test6.toString());
                                     Log.v("TakePic", test5 + " " + test6.toString());
+
 
                                 } catch (JSONException e) {
                                     Log.e("TakePic", e.toString());
@@ -141,7 +215,11 @@ public class TakePictureActivity extends AppCompatActivity {
                             public void onClarifaiResponseNetworkError(IOException e) {
 
                             }
+
+                        });*/
+
                         });
+
 
             }
         });
@@ -152,7 +230,6 @@ public class TakePictureActivity extends AppCompatActivity {
         String timeStamp = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "whatsthat_" + timeStamp + "_";
         File storageDir = getFilesDir();
-        //File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,
                 ".jpg",
@@ -164,12 +241,129 @@ public class TakePictureActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == myRequestCode && resultCode == RESULT_OK) {
+            howTo.setVisibility(View.INVISIBLE);
+            resultsButton.setVisibility(View.VISIBLE);
             Bundle extras = data.getExtras();
             imageBitmap = (Bitmap)extras.get("data");
             picturePreview.setImageBitmap(imageBitmap);
         }
+        // Remnant from when it was a button, not ImageButton
+        //cameraButton.setText("Retake Picture");
 
-        cameraButton.setText("Retake Picture");
+    }
 
+    @Override
+    public void onInit(int i) {
+        tts.setLanguage(Locale.US);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        tts.stop();
+        tts.shutdown();
+        super.onDestroy();
+    }
+
+    private void generalModel(ClarifaiClient myClient, byte[] bitArray) {
+        myClient.getDefaultModels().generalModel().predict()
+                .withInputs(
+                        ClarifaiInput.forImage(bitArray)//new File(fileName))
+                )
+                .executeAsync(new ClarifaiRequest.Callback<List<ClarifaiOutput<Concept>>>() {
+                    @Override
+                    public void onClarifaiResponseSuccess(List<ClarifaiOutput<Concept>> clarifaiOutputs) {
+                        String testJSON = new Gson().toJson(clarifaiOutputs);
+                        try {
+                            JSONArray test = new JSONArray(testJSON);
+                            JSONObject test2 = test.getJSONObject(0);
+                            JSONArray test3 = test2.getJSONArray("data");
+
+                            JSONObject test4 = test3.getJSONObject(0);
+                            final String test5 = test4.getString("name");
+                            Double test6 = test4.getDouble("value");
+                            Log.v("TakePic", test5 + " " + test6.toString());
+
+                            Runnable updateView = new Runnable() {
+                                @Override
+                                public void run() {
+                                    resultsText.setText(test5);
+                                    resultsText.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            tts.speak(test5, TextToSpeech.QUEUE_ADD, null);
+                                        }
+                                    });
+                                }
+                            };
+                            runOnUiThread(updateView);
+
+
+                        } catch (JSONException e) {
+                            Log.e("TakePic", e.toString());
+                        }
+                    }
+
+                    @Override
+                    public void onClarifaiResponseUnsuccessful(int errorCode) {
+
+                    }
+
+                    @Override
+                    public void onClarifaiResponseNetworkError(IOException e) {
+
+                    }
+                });
+    }
+
+    private void foodModel(ClarifaiClient myClient, byte[] bitArray) {
+        myClient.getDefaultModels().foodModel().predict()
+                .withInputs(
+                        ClarifaiInput.forImage(bitArray)//new File(fileName))
+                )
+                .executeAsync(new ClarifaiRequest.Callback<List<ClarifaiOutput<Concept>>>() {
+                    @Override
+                    public void onClarifaiResponseSuccess(List<ClarifaiOutput<Concept>> clarifaiOutputs) {
+                        String testJSON = new Gson().toJson(clarifaiOutputs);
+                        try {
+                            JSONArray test = new JSONArray(testJSON);
+                            JSONObject test2 = test.getJSONObject(0);
+                            JSONArray test3 = test2.getJSONArray("data");
+
+                            JSONObject test4 = test3.getJSONObject(0);
+                            final String test5 = test4.getString("name");
+                            Double test6 = test4.getDouble("value");
+                            Log.v("TakePic", test5 + " " + test6.toString());
+
+                            Runnable updateView = new Runnable() {
+                                @Override
+                                public void run() {
+                                    resultsText.setText(test5);
+                                    resultsText.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            tts.speak(test5, TextToSpeech.QUEUE_ADD, null);
+                                        }
+                                    });
+                                }
+                            };
+                            runOnUiThread(updateView);
+
+
+                        } catch (JSONException e) {
+                            Log.e("TakePic", e.toString());
+                        }
+                    }
+
+                    @Override
+                    public void onClarifaiResponseUnsuccessful(int errorCode) {
+
+                    }
+
+                    @Override
+                    public void onClarifaiResponseNetworkError(IOException e) {
+
+                    }
+                });
     }
 }
