@@ -36,12 +36,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+
 import clarifai2.api.ClarifaiBuilder;
 import clarifai2.api.ClarifaiClient;
 import clarifai2.api.request.ClarifaiRequest;
 import clarifai2.dto.input.ClarifaiInput;
 import clarifai2.dto.model.output.ClarifaiOutput;
 import clarifai2.dto.prediction.Concept;
+
 
 
 public class TakePictureActivity extends AppCompatActivity implements TextToSpeech.OnInitListener{
@@ -62,10 +64,12 @@ public class TakePictureActivity extends AppCompatActivity implements TextToSpee
     private boolean modelFood = true;
     private boolean modelGeneral = false;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_picture);
+
 
         resultsText = (TextView)findViewById(R.id.resultsText);
         helpText = (TextView)findViewById(R.id.helpText);
@@ -75,6 +79,7 @@ public class TakePictureActivity extends AppCompatActivity implements TextToSpee
         howTo = (ImageView)findViewById(R.id.howTo);
         modelToggle = (ToggleButton) findViewById(R.id.modelToggle);
         tts = new TextToSpeech(TakePictureActivity.this, TakePictureActivity.this);
+
 
         // Check if camera permission granted
         int permissionsCheck = ContextCompat.checkSelfPermission(TakePictureActivity.this,
@@ -101,6 +106,11 @@ public class TakePictureActivity extends AppCompatActivity implements TextToSpee
                 }
                 if (photoFile != null) {
                     photoURI = new File(getApplicationContext().getFilesDir(), photoFile);
+
+                     /*photoURI = FileProvider.getUriForFile(TakePictureActivity.this,
+                            "com.example.thehacker.whatsthat",
+                            photoFile);*/
+
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                     startActivityForResult(intent, myRequestCode);
                 }
@@ -136,7 +146,21 @@ public class TakePictureActivity extends AppCompatActivity implements TextToSpee
                     generalModel(myClient, bitArray);
                 }
 
+
                 /*myClient.getDefaultModels().foodModel().predict()
+
+             
+  
+                testText.setText("Sending to Clarifai");
+
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                imageBitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
+                byte[] bitArray = bos.toByteArray();
+
+                ClarifaiClient blah = new ClarifaiBuilder(API_KEY).buildSync();
+
+                blah.getDefaultModels().foodModel().predict()
+
                         .withInputs(
                                 ClarifaiInput.forImage(bitArray)//new File(fileName))
                         )
@@ -150,6 +174,7 @@ public class TakePictureActivity extends AppCompatActivity implements TextToSpee
                                     JSONArray test3 = test2.getJSONArray("data");
 
                                     JSONObject test4 = test3.getJSONObject(0);
+
                                     final String test5 = test4.getString("name");
                                     Double test6 = test4.getDouble("value");
                                     Log.v("TakePic", test5 + " " + test6.toString());
@@ -169,6 +194,13 @@ public class TakePictureActivity extends AppCompatActivity implements TextToSpee
                                     runOnUiThread(updateView);
 
 
+
+                                    String test5 = test4.getString("name");
+                                    Double test6 = test4.getDouble("value");
+                                    testText.setText(test5 + " " + test6.toString());
+                                    Log.v("TakePic", test5 + " " + test6.toString());
+
+
                                 } catch (JSONException e) {
                                     Log.e("TakePic", e.toString());
                                 }
@@ -183,7 +215,12 @@ public class TakePictureActivity extends AppCompatActivity implements TextToSpee
                             public void onClarifaiResponseNetworkError(IOException e) {
 
                             }
+
                         });*/
+
+                        });
+
+
             }
         });
     }
