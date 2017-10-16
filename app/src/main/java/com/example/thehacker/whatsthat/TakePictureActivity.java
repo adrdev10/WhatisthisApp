@@ -16,10 +16,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.speech.tts.TextToSpeech;
+import android.widget.ToggleButton;
 
 import com.google.gson.Gson;
 
@@ -55,7 +57,10 @@ public class TakePictureActivity extends AppCompatActivity implements TextToSpee
     private ImageView howTo;
     private TextView helpText;
     private TextView resultsText;
+    private ToggleButton modelToggle;
     private TextToSpeech tts;
+    private boolean modelFood = true;
+    private boolean modelGeneral = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +73,7 @@ public class TakePictureActivity extends AppCompatActivity implements TextToSpee
         resultsButton = (ImageButton)findViewById(R.id.resultsButton);
         picturePreview = (ImageView)findViewById(R.id.picturePreview);
         howTo = (ImageView)findViewById(R.id.howTo);
+        modelToggle = (ToggleButton) findViewById(R.id.modelToggle);
         tts = new TextToSpeech(TakePictureActivity.this, TakePictureActivity.this);
 
         // Check if camera permission granted
@@ -101,6 +107,19 @@ public class TakePictureActivity extends AppCompatActivity implements TextToSpee
             }
         });
 
+        modelToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    modelGeneral = true;
+                    modelFood = false;
+                } else {
+                    modelFood = true;
+                    modelGeneral = false;
+                }
+            }
+        });
+
         resultsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,9 +128,15 @@ public class TakePictureActivity extends AppCompatActivity implements TextToSpee
                 imageBitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
                 byte[] bitArray = bos.toByteArray();
 
-                ClarifaiClient blah = new ClarifaiBuilder(API_KEY).buildSync();
+                ClarifaiClient myClient = new ClarifaiBuilder(API_KEY).buildSync();
 
-                blah.getDefaultModels().foodModel().predict()
+                if (modelFood == true) {
+                    foodModel(myClient, bitArray);
+                } else {
+                    generalModel(myClient, bitArray);
+                }
+
+                /*myClient.getDefaultModels().foodModel().predict()
                         .withInputs(
                                 ClarifaiInput.forImage(bitArray)//new File(fileName))
                         )
@@ -158,8 +183,7 @@ public class TakePictureActivity extends AppCompatActivity implements TextToSpee
                             public void onClarifaiResponseNetworkError(IOException e) {
 
                             }
-                        });
-
+                        });*/
             }
         });
     }
@@ -202,5 +226,107 @@ public class TakePictureActivity extends AppCompatActivity implements TextToSpee
         tts.stop();
         tts.shutdown();
         super.onDestroy();
+    }
+
+    private void generalModel(ClarifaiClient myClient, byte[] bitArray) {
+        myClient.getDefaultModels().generalModel().predict()
+                .withInputs(
+                        ClarifaiInput.forImage(bitArray)//new File(fileName))
+                )
+                .executeAsync(new ClarifaiRequest.Callback<List<ClarifaiOutput<Concept>>>() {
+                    @Override
+                    public void onClarifaiResponseSuccess(List<ClarifaiOutput<Concept>> clarifaiOutputs) {
+                        String testJSON = new Gson().toJson(clarifaiOutputs);
+                        try {
+                            JSONArray test = new JSONArray(testJSON);
+                            JSONObject test2 = test.getJSONObject(0);
+                            JSONArray test3 = test2.getJSONArray("data");
+
+                            JSONObject test4 = test3.getJSONObject(0);
+                            final String test5 = test4.getString("name");
+                            Double test6 = test4.getDouble("value");
+                            Log.v("TakePic", test5 + " " + test6.toString());
+
+                            Runnable updateView = new Runnable() {
+                                @Override
+                                public void run() {
+                                    resultsText.setText(test5);
+                                    resultsText.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            tts.speak(test5, TextToSpeech.QUEUE_ADD, null);
+                                        }
+                                    });
+                                }
+                            };
+                            runOnUiThread(updateView);
+
+
+                        } catch (JSONException e) {
+                            Log.e("TakePic", e.toString());
+                        }
+                    }
+
+                    @Override
+                    public void onClarifaiResponseUnsuccessful(int errorCode) {
+
+                    }
+
+                    @Override
+                    public void onClarifaiResponseNetworkError(IOException e) {
+
+                    }
+                });
+    }
+
+    private void foodModel(ClarifaiClient myClient, byte[] bitArray) {
+        myClient.getDefaultModels().foodModel().predict()
+                .withInputs(
+                        ClarifaiInput.forImage(bitArray)//new File(fileName))
+                )
+                .executeAsync(new ClarifaiRequest.Callback<List<ClarifaiOutput<Concept>>>() {
+                    @Override
+                    public void onClarifaiResponseSuccess(List<ClarifaiOutput<Concept>> clarifaiOutputs) {
+                        String testJSON = new Gson().toJson(clarifaiOutputs);
+                        try {
+                            JSONArray test = new JSONArray(testJSON);
+                            JSONObject test2 = test.getJSONObject(0);
+                            JSONArray test3 = test2.getJSONArray("data");
+
+                            JSONObject test4 = test3.getJSONObject(0);
+                            final String test5 = test4.getString("name");
+                            Double test6 = test4.getDouble("value");
+                            Log.v("TakePic", test5 + " " + test6.toString());
+
+                            Runnable updateView = new Runnable() {
+                                @Override
+                                public void run() {
+                                    resultsText.setText(test5);
+                                    resultsText.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            tts.speak(test5, TextToSpeech.QUEUE_ADD, null);
+                                        }
+                                    });
+                                }
+                            };
+                            runOnUiThread(updateView);
+
+
+                        } catch (JSONException e) {
+                            Log.e("TakePic", e.toString());
+                        }
+                    }
+
+                    @Override
+                    public void onClarifaiResponseUnsuccessful(int errorCode) {
+
+                    }
+
+                    @Override
+                    public void onClarifaiResponseNetworkError(IOException e) {
+
+                    }
+                });
     }
 }
