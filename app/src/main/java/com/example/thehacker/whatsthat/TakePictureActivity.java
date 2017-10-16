@@ -46,7 +46,7 @@ public class TakePictureActivity extends AppCompatActivity {
     private ImageButton resultsButton;
     private ImageView picturePreview;
     private int myRequestCode = 1;
-    private String API_KEY = "b995121cec24470fb2dfa343a5529f7a"; // ADD API KEY!!!
+    private String API_KEY = ; // ADD API KEY!!!
     private static File photoURI;
     //private TextView testText;
     private static String fileName;
