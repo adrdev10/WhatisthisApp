@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.speech.tts.TextToSpeech;
 
 import com.google.gson.Gson;
 
@@ -31,6 +32,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import clarifai2.api.ClarifaiBuilder;
 import clarifai2.api.ClarifaiClient;
@@ -40,7 +42,7 @@ import clarifai2.dto.model.output.ClarifaiOutput;
 import clarifai2.dto.prediction.Concept;
 
 
-public class TakePictureActivity extends AppCompatActivity {
+public class TakePictureActivity extends AppCompatActivity implements TextToSpeech.OnInitListener{
 
     private ImageButton cameraButton;
     private ImageButton resultsButton;
@@ -48,12 +50,12 @@ public class TakePictureActivity extends AppCompatActivity {
     private int myRequestCode = 1;
     private String API_KEY = ; // ADD API KEY!!!
     private static File photoURI;
-    //private TextView testText;
     private static String fileName;
     private Bitmap imageBitmap;
     private ImageView howTo;
     private TextView helpText;
     private TextView resultsText;
+    private TextToSpeech tts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +68,7 @@ public class TakePictureActivity extends AppCompatActivity {
         resultsButton = (ImageButton)findViewById(R.id.resultsButton);
         picturePreview = (ImageView)findViewById(R.id.picturePreview);
         howTo = (ImageView)findViewById(R.id.howTo);
-        //testText = (TextView)findViewById(R.id.testText);
+        tts = new TextToSpeech(TakePictureActivity.this, TakePictureActivity.this);
 
         // Check if camera permission granted
         int permissionsCheck = ContextCompat.checkSelfPermission(TakePictureActivity.this,
@@ -93,9 +95,6 @@ public class TakePictureActivity extends AppCompatActivity {
                 }
                 if (photoFile != null) {
                     photoURI = new File(getApplicationContext().getFilesDir(), photoFile);
-                     /*photoURI = FileProvider.getUriForFile(TakePictureActivity.this,
-                            "com.example.thehacker.whatsthat",
-                            photoFile);*/
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                     startActivityForResult(intent, myRequestCode);
                 }
@@ -134,6 +133,12 @@ public class TakePictureActivity extends AppCompatActivity {
                                         @Override
                                         public void run() {
                                             resultsText.setText(test5);
+                                            resultsText.post(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    tts.speak(test5, TextToSpeech.QUEUE_ADD, null);
+                                                }
+                                            });
                                         }
                                     };
                                     runOnUiThread(updateView);
@@ -164,7 +169,6 @@ public class TakePictureActivity extends AppCompatActivity {
         String timeStamp = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "whatsthat_" + timeStamp + "_";
         File storageDir = getFilesDir();
-        //File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,
                 ".jpg",
@@ -185,5 +189,18 @@ public class TakePictureActivity extends AppCompatActivity {
         // Remnant from when it was a button, not ImageButton
         //cameraButton.setText("Retake Picture");
 
+    }
+
+    @Override
+    public void onInit(int i) {
+        tts.setLanguage(Locale.US);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        tts.stop();
+        tts.shutdown();
+        super.onDestroy();
     }
 }
