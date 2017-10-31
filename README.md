@@ -2,6 +2,11 @@
 
 [BC Hackathon 2017](https://csit.broward.edu/hackathon/) - Best Overall
 
+![Alt Text](http://gph.is/2z0fC04)
+
+## Description:
+What's this is a mobile application with the purpose of helping people with disabilities such as Vision loss, blindness. We used the Clarified API, along with three more third-party libraries. By taking a picture, the Clarified API analyzes the picture, processes, and with the help of object recognition done by the AI, it gives a list of the possible items located in the picture taken. We are planning to improve our app by implementing a food nutrition database that would contain the approximate calories if the user takes a picture of an editable. 
+
 ## Components:
 * [Agile Development](https://trello.com/b/eXXCBwoF/bchackathon)
 * [UI/UX](https://pr.to/L7MXD5/)
